@@ -3,6 +3,7 @@ local wndw = lib:Window("VIP Turtle Hub V4")
 local workspace = game:GetService("Workspace")
 local self = game.Players.LocalPlayer
 local T1 = wndw:Tab("Main")
+local T2 = wndw:Tab("Hatch")
 local T3 = wndw:Tab("Easter Event")
 
 local const = {
@@ -21,6 +22,11 @@ local const = {
   roll1 = false,
   roll2 = false,
   roll3 = false,
+  egg = {
+    args1 = "",
+    args2 = "",
+    toggle = false
+  }
 }
 
 lib:AddTable(workspace.Items.Easter.ClientBoss,const.boss.table)
@@ -35,7 +41,7 @@ end
     const.train = value
     while wait() do
       if const.train == false then break end
-      game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({"1","\11"})
+      game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({self:GetAttribute("World"):gsub("World",""),"\11"})
     end
   end)
 
@@ -106,6 +112,14 @@ T1:Toggle("Auto roll artifact",false,function(value)
     end
   end)
 
+T2:Toggle("Auto hatch",false,function(value)
+    const.egg.toggle = value
+    while wait() do
+      if const.egg.toggle == false then break end
+      game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({{"\1",const.egg.args1,const.egg.args2},"\6"})
+    end
+  end)
+
 T3:Dropdown("Choose boss",const.boss.table,function(value)
     const.boss.name = value
 end)
@@ -113,7 +127,6 @@ end)
 T3:Toggle("Use nearest system [ 25 Distance ]",true,function(value)
     const.near = value
 end)
-
 
 T3:Toggle("Instant win",false,function(value)
     const.boss.toggle = value
@@ -139,3 +152,10 @@ T3:Toggle("Auto hit all eggs",false,function(value)
       end)
     end
   end)
+
+lib:HookFunction(function(method,hook,args)
+    if method == "FireServer" and hook == "dataRemoteEvent" and args[1][1][1] == "\1" and args[1][2] == "\6" then
+      const.egg.args1 = args[1][1][2]
+      const.egg.args2 = args[1][1][3]
+    end
+end)
