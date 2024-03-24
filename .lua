@@ -41,7 +41,7 @@ end
     const.train = value
     while wait() do
       if const.train == false then break end
-      game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({self:GetAttribute("World"):gsub("World",""),"\11"})
+      game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({tostring(self:GetAttribute("World"):gsub("World","")),"\11"})
     end
   end)
 
