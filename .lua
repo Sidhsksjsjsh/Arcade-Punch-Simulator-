@@ -153,9 +153,10 @@ T3:Toggle("Auto hit all eggs",false,function(value)
     end
   end)
 
-lib:HookFunction(function(method,hook,args)
+--[[lib:HookFunction(function(method,hook,args)
     if method == "FireServer" and hook == "dataRemoteEvent" and args[1][1][1] == "\1" and args[1][2] == "\6" then
       const.egg.args1 = args[1][1][2]
       const.egg.args2 = args[1][1][3]
     end
 end)
+]]
