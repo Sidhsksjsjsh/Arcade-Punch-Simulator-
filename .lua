@@ -26,7 +26,8 @@ local const = {
     args1 = "",
     args2 = "",
     toggle = false
-  }
+  },
+  data = ""
 }
 
 lib:AddTable(workspace.Items.Easter.ClientBoss,const.boss.table)
@@ -37,15 +38,15 @@ local function child(path,funct)
   end
 end
 
-local function sob(stingray)
-  return stingray:gsub("World","")
+local function sob()
+  return const.data:gsub("World","")
 end
 
  T1:Toggle("Auto train",false,function(value)
     const.train = value
     while wait() do
       if const.train == false then break end
-      game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({tostring(sob(self:GetAttribute("World"))),"\11"})
+      game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({tostring(sob()),"\11"})
     end
   end)
 
@@ -164,3 +165,9 @@ T3:Toggle("Auto hit all eggs",false,function(value)
     end
 end)
 ]]
+
+task.spawn(function()
+    while wait() do
+      const.data = self:GetAttribute("World")
+    end
+end)
