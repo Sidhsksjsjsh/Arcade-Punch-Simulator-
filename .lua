@@ -10,17 +10,20 @@ local const = {
   punch = false,
   spin = false,
   reward = false,
-  egg = {
+  boss = {
     table = {},
-    name = "",
+    name = "First",
     toggle = false
   },
   easter = false,
   reb = false,
-  near = true
+  near = true,
+  roll1 = false,
+  roll2 = false,
+  roll3 = false,
 }
 
---lib:AddTable(,{})
+lib:AddTable(workspace.Items.Easter.ClientBoss,const.boss.table)
 
 local function child(path,funct)
   for i,v in pairs(path:GetChildren()) do
@@ -79,9 +82,46 @@ T1:Toggle("Auto rebirth",false,function(value)
     end
   end)
 
+T1:Toggle("Auto roll puzzles",false,function(value)
+    const.roll1 = value
+    while wait() do
+      if const.roll1 == false then break end
+      game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({"CraftRoll","\20"})
+    end
+  end)
+
+T1:Toggle("Auto roll event",false,function(value)
+    const.roll2 = value
+    while wait() do
+      if const.roll2 == false then break end
+      game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({"EventRoll","\20"})
+    end
+  end)
+
+T1:Toggle("Auto roll artifact",false,function(value)
+    const.roll3 = value
+    while wait() do
+      if const.roll3 == false then break end
+      game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({{"Roll","First"},"\7"})
+    end
+  end)
+
+T3:Dropdown("Choose boss",const.boss.table,function(value)
+    const.boss.name = value
+end)
+
 T3:Toggle("Use nearest system [ 25 Distance ]",true,function(value)
     const.near = value
 end)
+
+
+T3:Toggle("Instant win",false,function(value)
+    const.boss.toggle = value
+    while wait() do
+      if const.boss.toggle == false then break end
+        game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({{"BossDone",const.boss.name,"1"},"\n"})
+    end
+  end)
 
 --{{"Hit",v.Name},"\16","\11"}
 T3:Toggle("Auto hit all eggs",false,function(value)
