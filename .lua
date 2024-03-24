@@ -37,11 +37,15 @@ local function child(path,funct)
   end
 end
 
+local function sob(stingray)
+  return stingray:gsub("World","")
+end
+
  T1:Toggle("Auto train",false,function(value)
     const.train = value
     while wait() do
       if const.train == false then break end
-      game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({tostring(self:GetAttribute("World"):gsub("World","")),"\11"})
+      game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({tostring(sob(self:GetAttribute("World"))),"\11"})
     end
   end)
 
