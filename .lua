@@ -28,8 +28,8 @@ local const = {
     args2 = "",
     toggle = false
   },
-  data = ""
-  zone = {}
+  data = "",
+  zone = {},
   szone = ""
 }
 
