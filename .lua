@@ -34,7 +34,7 @@ local const = {
 }
 
 lib:AddTable(workspace.Items.Easter.ClientBoss,const.boss.table)
-lib:AddTable(workspace.Items.PunchingBags.World1,const.zone)
+lib:AddTable(workspace.Items.PunchingBags,const.zone)
 
 local function child(path,funct)
   for i,v in pairs(path:GetChildren()) do
