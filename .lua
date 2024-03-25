@@ -31,7 +31,8 @@ local const = {
   },
   data = "",
   zone = {},
-  szone = "",
+  szone = "null",
+  trainzone = "null",
   pet = false,
   annoy = false,
   accept = false,
@@ -74,22 +75,40 @@ T4:Dropdown("Choose zone",const.zone,function(value)
 end)
 
 T4:Button("Teleport",function()
-    game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({{"Travel",const.szone},"\t"})
+	if const.szone ~= "null" then
+		game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({{"Travel",const.szone},"\t"})
+	else
+		lib:notify(lib:ColorFonts("ZONE IS NULL! SELECT 1","Red"),10)
+	end
 end)
 
 T4:Button("Unlock",function()
-    game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({{"NextZone",const.szone},"\t"})
+	if const.szone ~= "null" then
+		game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({{"NextZone",const.szone},"\t"})
+	else
+		lib:notify(lib:ColorFonts("ZONE IS NULL! SELECT 1","Red"),10)
+	end
+end)
+
+T1:Dropdown("Choose world",const.zone,function(value)
+    const.trainzone = value
 end)
 
  T1:Toggle("Auto train",false,function(value)
     const.train = value
     while wait() do
       if const.train == false then break end
-      game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({tostring(sob()),"\11"})
-    end
+      --game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({tostring(sob()),"\11"})
+		if const.trainzone ~= "null" then
+			game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({tostring(const.trainzone:gsub("World","")),"\11"})
+		else
+			lib:notify(lib:ColorFonts("*Sigh*, I'm too tired to tell him.","Red"),10)
+			const.train = false
+		end
+	end
   end)
 
-T1:Toggle("Auto mechine punch",false,function(value)
+T1:Toggle("Auto win",false,function(value)
     const.punch = value
     while wait() do
       if const.punch == false then break end
