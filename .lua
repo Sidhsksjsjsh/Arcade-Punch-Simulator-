@@ -6,14 +6,15 @@ local T1 = wndw:Tab("Main")
 local T2 = wndw:Tab("Hatch")
 local T3 = wndw:Tab("Easter Event")
 local T4 = wndw:Tab("Teleport")
+local T5 = wndw:Tab("Fun")
 
 local const = {
   train = false,
   punch = false,
   spin = false,
   reward = false,
-  boss = {
-    table = {},
+  boss = { -- easter
+    table = {"First","Second","Third","Fourth","Fifth"},
     name = "First",
     toggle = false
   },
@@ -30,7 +31,10 @@ local const = {
   },
   data = "",
   zone = {},
-  szone = ""
+  szone = "",
+  pet = false,
+  annoy = false,
+  accept = false
 }
 
 lib:AddTable(workspace.Items.Easter.ClientBoss,const.boss.table)
@@ -38,6 +42,12 @@ lib:AddTable(workspace.Items.PunchingBags,const.zone)
 
 local function child(path,funct)
   for i,v in pairs(path:GetChildren()) do
+    funct(v)
+  end
+end
+
+local function player(funct)
+  for i,v in pairs(game.Players:GetPlayers()) do
     funct(v)
   end
 end
@@ -70,7 +80,7 @@ T1:Toggle("Auto mechine punch",false,function(value)
     const.punch = value
     while wait() do
       if const.punch == false then break end
-      game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({"PBD","1000000000000.9749999999999997"},"\n")
+      game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({"PBD","1.9749999999999997"},"\n")
     end
   end)
 
@@ -133,6 +143,14 @@ T1:Toggle("Auto roll artifact",false,function(value)
     end
   end)
 
+T1:Toggle("Auto claim kitsune [ Pet Quest ]",false,function(value)
+    const.pet = value
+    while wait() do
+      if const.pet == false then break end
+      game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({"PetQuest","\20"})
+    end
+  end)
+
 T2:Toggle("Auto hatch",false,function(value)
     const.egg.toggle = value
     while wait() do
@@ -171,6 +189,26 @@ T3:Toggle("Auto hit all eggs",false,function(value)
             game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({{"Hit",v.Name},"\16","\11"})
           end
       end)
+    end
+  end)
+
+T5:Toggle("Spam trade UI ( all players )",false,function(value)
+    const.annoy = value
+    while wait() do
+      if const.annoy == false then break end
+        player(function(v)
+          game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({{"Request",v.Name},"\19"})
+        end)
+    end
+  end)
+
+T5:Toggle("Auto accept / open trade without clicking",false,function(value)
+    const.annoy = value
+    while wait() do
+      if const.annoy == false then break end
+        player(function(v)
+          game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({{"Accept",v.Name},"\19"})
+        end)
     end
   end)
 
