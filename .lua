@@ -5,6 +5,7 @@ local self = game.Players.LocalPlayer
 local T1 = wndw:Tab("Main")
 local T2 = wndw:Tab("Hatch")
 local T3 = wndw:Tab("Easter Event")
+local T4 = wndw:Tab("Teleport")
 
 local const = {
   train = false,
@@ -28,9 +29,12 @@ local const = {
     toggle = false
   },
   data = ""
+  zone = {}
+  szone = ""
 }
 
 lib:AddTable(workspace.Items.Easter.ClientBoss,const.boss.table)
+lib:AddTable(workspace.Items.PunchingBags.World1,const.zone)
 
 local function child(path,funct)
   for i,v in pairs(path:GetChildren()) do
@@ -41,6 +45,18 @@ end
 local function sob()
   return const.data:gsub("World","")
 end
+
+T4:Dropdown("Choose zone",const.zone,function(value)
+    const.szone = value
+end)
+
+T4:Button("Teleport",function()
+    game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({{"Travel",const.szone},"\t"})
+end)
+
+T4:Button("Unlock",function()
+    game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({{"NextZone",const.szone},"\t"})
+end)
 
  T1:Toggle("Auto train",false,function(value)
     const.train = value
