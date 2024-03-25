@@ -34,7 +34,12 @@ local const = {
   szone = "",
   pet = false,
   annoy = false,
-  accept = false
+  accept = false,
+  player = {
+    name = "null",
+    annoy = false,
+    accept = false
+  }
 }
 
 lib:AddTable(workspace.Items.Easter.ClientBoss,const.boss.table)
@@ -51,6 +56,14 @@ local function player(funct)
     funct(v)
   end
 end
+
+--[[
+player(function(v)
+		if (string.sub(string.lower(v.Name),1,string.len(value))) == string.lower(value) then
+			args[3](v)
+		end
+end)
+]]
 
 local function sob()
   return const.data:gsub("World","")
@@ -192,6 +205,39 @@ T3:Toggle("Auto hit all eggs",false,function(value)
     end
   end)
 
+T5:Textbox("Insert player name ( can be shortner )",false,function(value)
+    player(function(v)
+        if (string.sub(string.lower(v.Name),1,string.len(value))) == string.lower(value) then
+          const.player.name = v.Name
+          lib:notify(lib:ColorFonts("Player found! display name : " .. v.DisplayName .. " (@" .. v.Name .. ")","Green"),10)
+        end
+    end)
+end)
+
+T5:Toggle("Spam trade UI ( selected player )",false,function(value)
+    const.player.annoy = value
+    while wait() do
+      if const.annoy == false then break end
+        if const.player.name ~= "null" then
+          game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({{"Request",const.player.name},"\19"})
+        else
+          lib:notify(lib:ColorFonts("INSERT PLAYER NAME!","Red"),10)
+        end
+    end
+  end)
+
+T5:Toggle("Auto open/accept trade without clicking ( selected player )",false,function(value)
+    const.player.accept = value
+    while wait() do
+      if const.player.accept == false then break end
+        if const.player.name ~= "null" then
+          game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({{"Accept",const.player.name},"\19"})
+        else
+          lib:notify(lib:ColorFonts("INSERT PLAYER NAME!","Red"),10)
+        end
+    end
+  end)
+
 T5:Toggle("Spam trade UI ( all players )",false,function(value)
     const.annoy = value
     while wait() do
@@ -203,9 +249,9 @@ T5:Toggle("Spam trade UI ( all players )",false,function(value)
   end)
 
 T5:Toggle("Auto accept / open trade without clicking",false,function(value)
-    const.annoy = value
+    const.accept = value
     while wait() do
-      if const.annoy == false then break end
+      if const.accept == false then break end
         player(function(v)
           game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({{"Accept",v.Name},"\19"})
         end)
