@@ -113,7 +113,7 @@ T1:Toggle("Auto win",false,function(value)
     const.punch = value
     while wait() do
       if const.punch == false then break end
-      game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({"PBD","1.9749999999999997"},"\n")
+      game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({{"PBD","1.9749999999999997"},"\n"})
     end
   end)
 
