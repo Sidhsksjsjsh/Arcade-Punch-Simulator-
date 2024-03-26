@@ -27,7 +27,8 @@ local const = {
   egg = {
     args1 = "",
     args2 = "",
-    toggle = false
+    toggle = false,
+    best = false
   },
   data = "",
   zone = {},
@@ -191,6 +192,14 @@ T2:Toggle("Auto hatch",false,function(value)
     end
   end)
 
+T2:Toggle("Auto equip best",false,function(value)
+    const.egg.best = value
+    while wait() do
+      if const.egg.best == false then break end
+      game:GetService("ReplicatedStorage")["BridgeNet"]["dataRemoteEvent"]:FireServer({{"Equip","Best"},"\21"})
+    end
+  end)
+
 T3:Dropdown("Choose boss",const.boss.table,function(value)
     const.boss.name = value
 end)
@@ -227,8 +236,10 @@ T3:Toggle("Auto hit all eggs",false,function(value)
 T5:Textbox("Insert player name ( can be shortner )",false,function(value)
     player(function(v)
         if (string.sub(string.lower(v.Name),1,string.len(value))) == string.lower(value) then
-          const.player.name = v.Name
-          lib:notify(lib:ColorFonts("Player found! display name : " .. v.DisplayName .. " (@" .. v.Name .. ")","Green"),10)
+		const.player.name = v.Name
+		lib:notify(lib:ColorFonts("Player found! display name : " .. v.DisplayName .. " (@" .. v.Name .. ")","Green"),10)
+	else
+		lib:notify(lib:ColorFonts("PLAYER NOT FOUND","Red"),10)
         end
     end)
 end)
